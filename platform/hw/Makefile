@@ -20,8 +20,12 @@ ifeq (${MACHINE},amd64)
 supported:= true
 endif
 ifeq (${MACHINE},evbarm)
-supported:= true
 ARCHDIR= arm/integrator
+supported:= true
+endif
+ifeq (${MACHINE},evbearmhf-el)
+ARCHDIR= arm/rpi
+supported:= true
 endif
 ifneq (${supported},true)
 $(error only supported target is x86, you have ${MACHINE})

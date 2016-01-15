@@ -38,11 +38,12 @@ helpme ()
 {
 
 	printf "Usage: $0 [-d destdir] [-j num] [-k] [-o objdir] [-q]\n"
-	printf "\t[-s srcdir] hw|xen [build] [install] [-- buildrump.sh opts]\n"
+	printf "\t[-s srcdir] hw|xen [-b board] [build] [install] [-- buildrump.sh opts]\n"
 	printf "\n"
 	printf "\t-d: destination base directory, used by \"install\".\n"
 	printf "\t-j: run <num> make jobs simultaneously.\n"
 	printf "\t-q: quiet(er) build.  option may be specified twice.\n\n"
+	printf "\t-b: board type for ARM platforms.\n\n"
 	printf "\tThe default actions are \"build\" and \"install\"\n\n"
 
 	printf "Expert-only options:\n"
@@ -103,7 +104,7 @@ parseargs ()
 	DOinstall=false
 
 	orignargs=$#
-	while getopts '?d:hj:ko:qs:' opt; do
+	while getopts '?d:hj:ko:qs:b:' opt; do
 		case "$opt" in
 		'j')
 			[ -z "$(echo ${OPTARG} | tr -d '[0-9]')" ] \
@@ -125,6 +126,9 @@ parseargs ()
 			;;
 		'q')
 			BUILD_QUIET=${BUILD_QUIET:=-}q
+			;;
+		'b')
+			BOARD="${OPTARG}"
 			;;
 		'h'|'?')
 			helpme
@@ -419,6 +423,7 @@ makeconfig ()
 	echo "BUILDRUMP_TOOLFLAGS=${quote}$(pwd)/${RUMPTOOLS}/toolchain-conf.mk${quote}" >> ${1}
 	echo "MACHINE=${quote}${MACHINE}${quote}" >> ${1}
 	echo "MACHINE_GNU_ARCH=${quote}${MACHINE_GNU_ARCH}${quote}" >> ${1}
+	echo "BOARD=${quote}${BOARD}${quote}" >> ${1}
 	echo "TOOLTUPLE=${quote}${TOOLTUPLE}${quote}" >> ${1}
 	echo "KERNONLY=${quote}${KERNONLY}${quote}" >> ${1}
 	echo "PLATFORM=${quote}${PLATFORM}${quote}" >> ${1}
